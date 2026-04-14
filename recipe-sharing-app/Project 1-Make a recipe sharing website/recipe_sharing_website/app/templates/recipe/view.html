@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.title }} - Recipe Sharing Website{% endblock %}
+
+{% block content %}
+<div class="recipe-detail">
+    <div class="recipe-header">
+        <h1>{{ recipe.title }}</h1>
+        <p class="recipe-meta">by <a href="{{ url_for('main.profile', username=recipe.author.username) }}">{{ recipe.author.username }}</a></p>
+    </div>
+
+    <div class="recipe-image" style="background-image: url('{{ recipe.image_url }}')"></div>
+
+    <div class="recipe-info-bar">
+        <div class="info-item">
+            <strong>⏱️ Prep Time:</strong> {{ recipe.prep_time }} minutes
+        </div>
+        <div class="info-item">
+            <strong>🔥 Cook Time:</strong> {{ recipe.cook_time }} minutes
+        </div>
+        <div class="info-item">
+            <strong>🍽️ Servings:</strong> {{ recipe.servings }}
+        </div>
+        {% if avg_rating > 0 %}
+        <div class="info-item">
+            <strong>⭐ Rating:</strong> {{ "%.1f"|format(avg_rating) }}/5
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="recipe-content">
+        <div class="recipe-section">
+            <h2>Description</h2>
+            <p>{{ recipe.description }}</p>
+        </div>
+
+        <div class="recipe-section">
+            <h2>Ingredients</h2>
+            <ul class="ingredients-list">
+                {% for ingredient in recipe.ingredients.split('\n') %}
+                    {% if ingredient.strip() %}
+                        <li>{{ ingredient.strip() }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="recipe-section">
+            <h2>Instructions</h2>
+            <ol class="instructions-list">
+                {% for instruction in recipe.instructions.split('\n') %}
+                    {% if instruction.strip() %}
+                        <li>{{ instruction.strip() }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+    <div class="comments-section">
+        <h2>Comments & Ratings</h2>
+        
+        {% if current_user.is_authenticated %}
+        <div class="comment-form">
+            <h3>Add Your Comment</h3>
+            <form method="POST" action="{{ url_for('recipe.add_comment', recipe_id=recipe.id) }}">
+                <div class="form-group">
+                    <label for="rating">Rating:</label>
+                    <select id="rating" name="rating" required>
+                        <option value="5">⭐⭐⭐⭐⭐ Excellent (5/5)</option>
+                        <option value="4">⭐⭐⭐⭐ Good (4/5)</option>
+                        <option value="3">⭐⭐⭐ Average (3/5)</option>
+                        <option value="2">⭐⭐ Poor (2/5)</option>
+                        <option value="1">⭐ Bad (1/5)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="content">Comment:</label>
+                    <textarea id="content" name="content" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Post Comment</button>
+            </form>
+        </div>
+        {% else %}
+        <p><a href="{{ url_for('auth.login') }}">Login</a> to add a comment</p>
+        {% endif %}
+
+        <div class="comments-list">
+            {% for comment in comments %}
+            <div class="comment">
+                <div class="comment-header">
+                    <strong><a href="{{ url_for('main.profile', username=comment.author.username) }}">{{ comment.author.username }}</a></strong>
+                    <span class="comment-rating">{{ "⭐" * comment.rating }}</span>
+                    <span class="comment-date">{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+                <p>{{ comment.content }}</p>
+                {% if current_user.is_authenticated and (current_user.id == comment.user_id or current_user.id == recipe.user_id) %}
+                <form method="POST" action="{{ url_for('recipe.delete_comment', comment_id=comment.id) }}" style="display:inline;">
+                    <button type="submit" class="btn-small-danger">Delete</button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

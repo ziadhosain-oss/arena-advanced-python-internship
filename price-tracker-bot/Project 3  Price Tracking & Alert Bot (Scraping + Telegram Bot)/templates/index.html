@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Price History</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Tracked Products</h1>
+
+    {% if products %}
+        {% for product in products %}
+            <h2>{{ product.title }}</h2>
+            <p>Current Price: {{ product.current_price }}</p>
+            <canvas id="chart{{ loop.index }}"></canvas>
+            <script>
+                var ctx = document.getElementById('chart{{ loop.index }}').getContext('2d');
+                var chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [...Array({{ product.history|length }}).keys()],
+                        datasets: [{
+                            label: 'Price',
+                            data: {{ product.history|map(attribute='price')|list }},
+                            borderColor: 'blue',
+                            fill: false
+                        }]
+                    }
+                });
+            </script>
+        {% endfor %}
+    {% else %}
+        <p>No products tracked yet. Use /track in Telegram to add one.</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card">
+        <h2>{{ job.title }}</h2>
+        <p><strong>Company:</strong> {% if job.employer.is_employer %}{{ job.employer.employer_profile.company_name }}{% else %}{{ job.employer.username }}{% endif %}</p>
+        <p><strong>Location:</strong> {{ job.location }}</p>
+        <p><strong>Salary:</strong> ${{ job.salary }}</p>
+        <p><strong>Category:</strong> {% if job.category %}{{ job.category.name }}{% else %}General{% endif %}</p>
+        <p>{{ job.description }}</p>
+        <p><strong>Posted:</strong> {{ job.created_at|date:'F j, Y' }}</p>
+    </div>
+
+    {% if user.is_authenticated and user.is_seeker %}
+        <div class="card">
+            {% if already_applied %}
+                <p>You have already applied for this role.</p>
+            {% else %}
+                <a class="button" href="{% url 'jobs:apply_job' job.pk %}">Apply for this Job</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if user.is_authenticated and user.is_employer and user == job.employer %}
+        <div class="card">
+            <a class="button" href="{% url 'jobs:job_edit' job.pk %}">Edit Job</a>
+            <a class="button button-alt" href="{% url 'jobs:job_delete' job.pk %}">Delete Job</a>
+        </div>
+    {% endif %}
+{% endblock %}

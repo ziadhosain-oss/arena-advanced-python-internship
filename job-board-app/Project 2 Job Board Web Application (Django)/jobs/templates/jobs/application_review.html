@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card">
+        <h2>Review Application</h2>
+        <p><strong>Job:</strong> {{ application.job.title }}</p>
+        <p><strong>Candidate:</strong> {{ application.seeker.username }}</p>
+        <p><strong>Status:</strong> {{ application.get_status_display }}</p>
+        <p><a href="{{ application.resume.url }}">Download Resume</a></p>
+        <form method="post">
+            {% csrf_token %}
+            <button class="button" type="submit" name="action" value="accepted">Accept</button>
+            <button class="button button-alt" type="submit" name="action" value="rejected">Reject</button>
+        </form>
+    </div>
+{% endblock %}

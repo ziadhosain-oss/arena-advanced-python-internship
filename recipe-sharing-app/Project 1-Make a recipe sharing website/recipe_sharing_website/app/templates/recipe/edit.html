@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Recipe - Recipe Sharing Website{% endblock %}
+
+{% block content %}
+<div class="recipe-form-container">
+    <h1>Edit Recipe</h1>
+    <form method="POST" class="recipe-form">
+        <div class="form-group">
+            <label for="title">Recipe Title:</label>
+            <input type="text" id="title" name="title" value="{{ recipe.title }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="3" required>{{ recipe.description }}</textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prep_time">Prep Time (minutes):</label>
+                <input type="number" id="prep_time" name="prep_time" value="{{ recipe.prep_time }}" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="cook_time">Cook Time (minutes):</label>
+                <input type="number" id="cook_time" name="cook_time" value="{{ recipe.cook_time }}" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="servings">Servings:</label>
+                <input type="number" id="servings" name="servings" value="{{ recipe.servings }}" min="1">
+            </div>
+
+            <div class="form-group">
+                <label for="category_id">Category:</label>
+                <select id="category_id" name="category_id">
+                    <option value="">Select a category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category.id == recipe.category_id %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="ingredients">Ingredients (one per line):</label>
+            <textarea id="ingredients" name="ingredients" rows="8" required>{{ recipe.ingredients }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="instructions">Instructions (one per line):</label>
+            <textarea id="instructions" name="instructions" rows="8" required>{{ recipe.instructions }}</textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+            <a href="{{ url_for('recipe.view', recipe_id=recipe.id) }}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Recipes - Admin{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-page-header">
+        <h1>📚 Manage Recipes</h1>
+        <a href="{{ url_for('admin.create_recipe') }}" class="btn-primary">➕ Create Recipe</a>
+    </div>
+
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for recipe in recipes.items %}
+                <tr>
+                    <td><strong>{{ recipe.title }}</strong></td>
+                    <td>{{ recipe.category.name if recipe.category else 'N/A' }}</td>
+                    <td><a href="{{ url_for('main.profile', username=recipe.author.username) }}">{{ recipe.author.username }}</a></td>
+                    <td>{{ recipe.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('recipe.view', recipe_id=recipe.id) }}" class="btn-small-secondary">View</a>
+                        <a href="{{ url_for('admin.edit_recipe', recipe_id=recipe.id) }}" class="btn-small-secondary">Edit</a>
+                        <form method="POST" action="{{ url_for('admin.delete_recipe', recipe_id=recipe.id) }}" style="display:inline;">
+                            <button type="submit" class="btn-small-danger" onclick="return confirm('Delete this recipe?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if recipes.has_prev %}
+            <a href="{{ url_for('admin.recipes_list', page=recipes.prev_num) }}" class="btn-secondary">Previous</a>
+        {% endif %}
+        
+        <span>Page {{ recipes.page }} of {{ recipes.pages }}</span>
+        
+        {% if recipes.has_next %}
+            <a href="{{ url_for('admin.recipes_list', page=recipes.next_num) }}" class="btn-secondary">Next</a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.admin-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #667eea;
+}
+
+.admin-page-header h1 {
+    margin: 0;
+    border: none;
+}
+
+.admin-table {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.admin-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table thead {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.admin-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.admin-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.admin-table a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.admin-table a:hover {
+    text-decoration: underline;
+}
+
+.admin-table .btn-small-secondary,
+.admin-table .btn-small-danger {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.admin-table .btn-small-secondary {
+    background: #667eea;
+    color: white;
+    margin-right: 0.5rem;
+}
+
+.admin-table .btn-small-secondary:hover {
+    background: #5568d3;
+}
+
+.admin-table .btn-small-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.admin-table .btn-small-danger:hover {
+    background: #c0392b;
+}
+</style>
+{% endblock %}

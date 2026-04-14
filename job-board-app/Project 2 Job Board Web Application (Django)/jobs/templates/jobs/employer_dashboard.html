@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card">
+        <h2>Employer Dashboard</h2>
+        <a class="button" href="{% url 'jobs:job_create' %}">Post a New Job</a>
+    </div>
+
+    <div class="card">
+        <h3>Your Jobs</h3>
+        {% for job in jobs %}
+            <div style="padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+                <strong>{{ job.title }}</strong> — {{ job.location }} (${{ job.salary }})
+                <div><a href="{% url 'jobs:job_edit' job.pk %}">Edit</a> | <a href="{% url 'jobs:job_delete' job.pk %}">Delete</a></div>
+            </div>
+        {% empty %}
+            <p>No jobs posted yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="card">
+        <h3>Applications</h3>
+        {% for application in applications %}
+            <div style="padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+                <p><strong>{{ application.seeker.username }}</strong> applied for <a href="{% url 'jobs:job_detail' application.job.pk %}">{{ application.job.title }}</a></p>
+                <p>Status: {{ application.get_status_display }}</p>
+                <p><a href="{{ application.resume.url }}">Download Resume</a></p>
+                <form method="post" action="{% url 'jobs:application_review' application.pk %}">
+                    {% csrf_token %}
+                    <button class="button" type="submit" name="action" value="accepted">Accept</button>
+                    <button class="button button-alt" type="submit" name="action" value="rejected">Reject</button>
+                </form>
+            </div>
+        {% empty %}
+            <p>No applications yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card">
+        <h2>Apply for {{ job.title }}</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button" type="submit">Submit Application</button>
+        </form>
+    </div>
+{% endblock %}

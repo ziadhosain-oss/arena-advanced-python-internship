@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Create Recipe - Admin{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h1>📝 Create Recipe</h1>
+    
+    <form method="POST" class="recipe-form">
+        <div class="form-group">
+            <label for="title">Recipe Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="3" required></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prep_time">Prep Time (minutes):</label>
+                <input type="number" id="prep_time" name="prep_time" value="0" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="cook_time">Cook Time (minutes):</label>
+                <input type="number" id="cook_time" name="cook_time" value="0" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="servings">Servings:</label>
+                <input type="number" id="servings" name="servings" value="1" min="1">
+            </div>
+
+            <div class="form-group">
+                <label for="category_id">Category:</label>
+                <select id="category_id" name="category_id">
+                    <option value="">Select a category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="ingredients">Ingredients (one per line):</label>
+            <textarea id="ingredients" name="ingredients" rows="8" required placeholder="2 cups flour&#10;1 cup sugar&#10;3 eggs"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="instructions">Instructions (one per line):</label>
+            <textarea id="instructions" name="instructions" rows="8" required placeholder="Preheat oven to 350°F&#10;Mix dry ingredients&#10;Combine with wet ingredients"></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Create Recipe</button>
+            <a href="{{ url_for('admin.recipes_list') }}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.recipe-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 800px;
+}
+
+.recipe-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.recipe-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.recipe-form input,
+.recipe-form textarea,
+.recipe-form select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.recipe-form input:focus,
+.recipe-form textarea:focus,
+.recipe-form select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.recipe-form .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.recipe-form .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.recipe-form .form-actions button,
+.recipe-form .form-actions a {
+    flex: 1;
+    padding: 0.75rem;
+    text-align: center;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.recipe-form .btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.recipe-form .btn-primary:hover {
+    background: #5568d3;
+}
+
+.recipe-form .btn-secondary {
+    background: #ecf0f1;
+    color: #333;
+    border: 1px solid #bdc3c7;
+}
+
+.recipe-form .btn-secondary:hover {
+    background: #d5dbdb;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Recipe Sharing Website{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>⚙️ Admin Dashboard</h1>
+        <p>Welcome back, Admin! Manage your recipe platform below.</p>
+    </div>
+
+    <div class="admin-stats">
+        <div class="stat-card">
+            <h3>📚 Recipes</h3>
+            <div class="stat-number">{{ recipes_count }}</div>
+            <a href="{{ url_for('admin.recipes_list') }}" class="stat-link">Manage Recipes</a>
+        </div>
+
+        <div class="stat-card">
+            <h3>🏷️ Categories</h3>
+            <div class="stat-number">{{ categories_count }}</div>
+            <a href="{{ url_for('admin.categories_list') }}" class="stat-link">Manage Categories</a>
+        </div>
+
+        <div class="stat-card warning">
+            <h3>💬 Pending Comments</h3>
+            <div class="stat-number">{{ pending_comments }}</div>
+            <a href="{{ url_for('admin.comments_list') }}" class="stat-link">Review Comments</a>
+        </div>
+
+        <div class="stat-card">
+            <h3>👥 Users</h3>
+            <div class="stat-number">{{ users_count }}</div>
+            <a href="{{ url_for('main.index') }}" class="stat-link">Browse Website</a>
+        </div>
+    </div>
+
+    <div class="admin-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+            <a href="{{ url_for('admin.create_recipe') }}" class="btn-primary">➕ Create Recipe</a>
+            <a href="{{ url_for('admin.create_category') }}" class="btn-secondary">➕ Create Category</a>
+            <a href="{{ url_for('admin.comments_list', status='pending') }}" class="btn-primary">📋 Moderate Comments</a>
+            <a href="{{ url_for('main.index') }}" class="btn-secondary">🔍 View Website</a>
+        </div>
+    </div>
+
+    <div class="admin-info">
+        <h2>📊 System Information</h2>
+        <div class="info-box">
+            <h3>User Journey & Content Flow</h3>
+            <ul>
+                <li><strong>User Sequence:</strong> Homepage → Categories/Search → Recipe View → Comments</li>
+                <li><strong>Admin Sequence:</strong> Categories → Recipes → Moderation</li>
+                <li><strong>Comments:</strong> Submitted by users → Pending approval → Published</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+    margin: 0 0 0.5rem 0;
+    border: none;
+    color: white;
+}
+
+.admin-header p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    border-left: 4px solid #667eea;
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.stat-card.warning {
+    border-left-color: #f39c12;
+}
+
+.stat-card h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #667eea;
+    margin: 1rem 0;
+}
+
+.stat-card.warning .stat-number {
+    color: #f39c12;
+}
+
+.stat-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.stat-link:hover {
+    background: #5568d3;
+}
+
+.stat-card.warning .stat-link {
+    background: #f39c12;
+}
+
+.stat-card.warning .stat-link:hover {
+    background: #e67e22;
+}
+
+.admin-actions {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.admin-actions h2 {
+    margin-top: 0;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.action-buttons a {
+    padding: 1rem;
+    text-align: center;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.action-buttons .btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.action-buttons .btn-primary:hover {
+    background: #5568d3;
+}
+
+.action-buttons .btn-secondary {
+    background: #ecf0f1;
+    color: #333;
+    border: 2px solid #667eea;
+}
+
+.action-buttons .btn-secondary:hover {
+    background: #667eea;
+    color: white;
+}
+
+.admin-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.info-box {
+    background: #ecf0f1;
+    padding: 1.5rem;
+    border-radius: 4px;
+    border-left: 4px solid #667eea;
+}
+
+.info-box h3 {
+    margin-top: 0;
+}
+
+.info-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-box li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #bdc3c7;
+}
+
+.info-box li:last-child {
+    border-bottom: none;
+}
+
+.info-box strong {
+    color: #667eea;
+}
+</style>
+{% endblock %}

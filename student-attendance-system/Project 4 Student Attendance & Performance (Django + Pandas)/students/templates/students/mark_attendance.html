@@ -1,0 +1,32 @@
+{% extends 'students/base.html' %}
+
+{% block title %}Mark Attendance{% endblock %}
+
+{% block content %}
+    <h2>Daily Attendance - {% now "F j, Y" %}</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Present?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                    <tr>
+                        <td>
+                            {{ form.initial.student_name }}
+                            {{ form.student }} </td>
+                        <td style="text-align: center;">{{ form.is_present }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <button type="submit" class="btn">Save Attendance Records</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - Recipe Sharing Website{% endblock %}
+
+{% block content %}
+<div class="search-results">
+    <h1>Search Results{% if query %} for "{{ query }}"{% endif %}</h1>
+
+    {% if recipes %}
+        <div class="recipes-grid">
+            {% for recipe in recipes.items %}
+                <div class="recipe-card">
+                    <div class="recipe-image" style="background-image: url('{{ recipe.image_url }}')"></div>
+                    <div class="recipe-content">
+                        <h3><a href="{{ url_for('recipe.view', recipe_id=recipe.id) }}">{{ recipe.title }}</a></h3>
+                        <p class="recipe-author">by <a href="{{ url_for('main.profile', username=recipe.author.username) }}">{{ recipe.author.username }}</a></p>
+                        <p class="recipe-description">{{ recipe.description[:100] }}...</p>
+                        <div class="recipe-info">
+                            <span>⏱️ {{ recipe.prep_time + recipe.cook_time }} min</span>
+                            <span>🍽️ {{ recipe.servings }} servings</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            {% if recipes.has_prev %}
+                <a href="{{ url_for('main.search', q=query, page=recipes.prev_num) }}" class="btn-secondary">Previous</a>
+            {% endif %}
+            
+            <span>Page {{ recipes.page }} of {{ recipes.pages }}</span>
+            
+            {% if recipes.has_next %}
+                <a href="{{ url_for('main.search', q=query, page=recipes.next_num) }}" class="btn-secondary">Next</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>No recipes found{% if query %} for "{{ query }}"{% endif %}. Try a different search.</p>
+    {% endif %}
+</div>
+{% endblock %}

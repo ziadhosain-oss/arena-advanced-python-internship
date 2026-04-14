@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card">
+        <h2>Search Jobs</h2>
+        <form method="get">
+            <label>Keyword</label>
+            <input type="search" name="q" value="{{ search_text }}" placeholder="Title, category or description">
+            <label>Location</label>
+            <input type="search" name="location" value="{{ location }}" placeholder="City or region">
+            <label>Minimum salary</label>
+            <input type="number" name="salary" value="{{ salary }}" min="0" placeholder="Salary">
+            <button class="button" type="submit" style="margin-top: 0.75rem;">Filter</button>
+        </form>
+    </div>
+
+    {% for job in page_obj %}
+        <div class="card">
+            <h3><a href="{% url 'jobs:job_detail' job.pk %}">{{ job.title }}</a></h3>
+            <p><strong>Company:</strong> {% if job.employer.is_employer %}{{ job.employer.employer_profile.company_name }}{% else %}{{ job.employer.username }}{% endif %}</p>
+            <p><strong>Location:</strong> {{ job.location }} | <strong>Salary:</strong> ${{ job.salary }}</p>
+            <p><strong>Category:</strong> {% if job.category %}{{ job.category.name }}{% else %}General{% endif %}</p>
+            <p>{{ job.description|truncatechars:180 }}</p>
+            <a class="button" href="{% url 'jobs:job_detail' job.pk %}">View Job</a>
+        </div>
+    {% empty %}
+        <div class="card">
+            <p>No jobs match your search criteria.</p>
+        </div>
+    {% endfor %}
+
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+            {% if page_obj.has_previous %}
+                <a class="button button-alt" href="?page={{ page_obj.previous_page_number }}&q={{ search_text }}&location={{ location }}&salary={{ salary }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a class="button" href="?page={{ page_obj.next_page_number }}&q={{ search_text }}&location={{ location }}&salary={{ salary }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

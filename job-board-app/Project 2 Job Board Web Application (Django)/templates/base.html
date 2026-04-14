@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Job Board</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f3f5f7; }
+        header, nav { background: #1a4d7a; color: #fff; }
+        header { padding: 1rem 0; }
+        nav { padding: 0.75rem 0; }
+        .container { width: min(1100px, 96%); margin: 0 auto; }
+        a { color: #1a9cff; text-decoration: none; }
+        .card { background: #fff; border: 1px solid #dde2e7; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .button { display: inline-block; background: #1a4d7a; color: #fff; padding: 0.5rem 0.9rem; border-radius: 4px; text-decoration: none; }
+        .button-alt { background: #6c7a89; }
+        .message-list { list-style: none; padding: 0; margin: 0 0 1rem 0; }
+        .message-list li { background: #fff8c4; padding: 0.75rem; border: 1px solid #f0e6a8; margin-bottom: 0.5rem; border-radius: 4px; }
+        label { display: block; margin-top: 0.75rem; }
+        input, textarea, select { width: 100%; padding: 0.65rem; border: 1px solid #c7d2db; border-radius: 5px; margin-top: 0.25rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="{% url 'jobs:home' %}" style="color: #fff;">Job Board</a></h1>
+        </div>
+    </header>
+    <nav>
+        <div class="container">
+            {% if user.is_authenticated %}
+                Hello, {{ user.username }} |
+                {% if user.is_employer %}<a href="{% url 'jobs:employer_dashboard' %}">Employer Dashboard</a> |{% endif %}
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a> |
+                <a href="{% url 'accounts:signup_choice' %}">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+    <main>
+        <div class="container">
+            {% if messages %}
+                <ul class="message-list">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>

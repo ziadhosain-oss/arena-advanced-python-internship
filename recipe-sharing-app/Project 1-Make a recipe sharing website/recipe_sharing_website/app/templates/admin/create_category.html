@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Create Category - Admin{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h1>🏷️ Create Category</h1>
+    
+    <form method="POST" class="admin-form">
+        <div class="form-group">
+            <label for="name">Category Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4"></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Create Category</button>
+            <a href="{{ url_for('admin.categories_list') }}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.admin-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 600px;
+}
+
+.admin-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.admin-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.admin-form input,
+.admin-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.admin-form .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.admin-form .form-actions button,
+.admin-form .form-actions a {
+    flex: 1;
+    padding: 0.75rem;
+    text-align: center;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.admin-form .btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.admin-form .btn-primary:hover {
+    background: #5568d3;
+}
+
+.admin-form .btn-secondary {
+    background: #ecf0f1;
+    color: #333;
+    border: 1px solid #bdc3c7;
+}
+
+.admin-form .btn-secondary:hover {
+    background: #d5dbdb;
+}
+</style>
+{% endblock %}

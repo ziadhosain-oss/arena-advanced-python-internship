@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }}'s Profile - Recipe Sharing Website{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="profile-header">
+        <h1>{{ user.username }}'s Profile</h1>
+        {% if user.bio %}
+            <p class="profile-bio">{{ user.bio }}</p>
+        {% endif %}
+        <p class="profile-joined">Member since {{ user.created_at.strftime('%B %Y') }}</p>
+    </div>
+
+    <div class="profile-stats">
+        <div class="stat">
+            <strong>{{ recipes.total }}</strong>
+            <span>Recipes</span>
+        </div>
+    </div>
+
+    <h2>{{ user.username }}'s Recipes</h2>
+    
+    {% if recipes.items %}
+        <div class="recipes-grid">
+            {% for recipe in recipes.items %}
+                <div class="recipe-card">
+                    <div class="recipe-image" style="background-image: url('{{ recipe.image_url }}')"></div>
+                    <div class="recipe-content">
+                        <h3><a href="{{ url_for('recipe.view', recipe_id=recipe.id) }}">{{ recipe.title }}</a></h3>
+                        <p class="recipe-description">{{ recipe.description[:100] }}...</p>
+                        <div class="recipe-info">
+                            <span>⏱️ {{ recipe.prep_time + recipe.cook_time }} min</span>
+                            <span>🍽️ {{ recipe.servings }} servings</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            {% if recipes.has_prev %}
+                <a href="{{ url_for('main.profile', username=user.username, page=recipes.prev_num) }}" class="btn-secondary">Previous</a>
+            {% endif %}
+            
+            <span>Page {{ recipes.page }} of {{ recipes.pages }}</span>
+            
+            {% if recipes.has_next %}
+                <a href="{{ url_for('main.profile', username=user.username, page=recipes.next_num) }}" class="btn-secondary">Next</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>This user hasn't shared any recipes yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
