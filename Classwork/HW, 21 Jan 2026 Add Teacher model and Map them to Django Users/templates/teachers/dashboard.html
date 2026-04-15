@@ -1,0 +1,95 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">Welcome, {{ teacher.user.get_full_name }}</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Teacher Information</h5>
+                    <p><strong>Teacher ID:</strong> {{ teacher.teacher_id }}</p>
+                    <p><strong>Teacher Type:</strong> {{ teacher.get_teacher_type_display }}</p>
+                    <p><strong>Department:</strong> {{ teacher.department|default:"Not assigned" }}</p>
+                    <p><strong>Qualification:</strong> {{ teacher.qualification|default:"Not specified" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Available Modules</h3>
+            <div class="row">
+                {% if permissions.can_view_attendance %}
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">📊 Attendance</h5>
+                            <p class="card-text">
+                                {% if permissions.can_edit_attendance %}
+                                ✓ View and edit student attendance
+                                {% else %}
+                                ✓ View student attendance only
+                                {% endif %}
+                            </p>
+                            <a href="{% url 'teachers:view_attendance_all' %}" class="btn btn-primary">Access</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if permissions.can_view_marks %}
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">📝 Marks</h5>
+                            <p class="card-text">
+                                {% if permissions.can_edit_marks %}
+                                ✓ View and edit student marks
+                                {% else %}
+                                ✓ View student marks only
+                                {% endif %}
+                            </p>
+                            <a href="{% url 'teachers:view_marks_all' %}" class="btn btn-primary">Access</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if permissions.can_view_fees %}
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">💰 Fees</h5>
+                            <p class="card-text">
+                                {% if permissions.can_edit_fees %}
+                                ✓ View and edit fee records
+                                {% else %}
+                                ✓ View fee records only
+                                {% endif %}
+                            </p>
+                            <a href="{% url 'teachers:view_fees_all' %}" class="btn btn-primary">Access</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if permissions.can_manage_students %}
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">👨‍🎓 Student Management</h5>
+                            <p class="card-text">Manage student profiles and records</p>
+                            <a href="{% url 'teachers:manage_students' %}" class="btn btn-primary">Access</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Filter Students by Class & Section</h1>
+
+<div class="card">
+    <form method="POST" action="{{ url_for('filter_students') }}">
+        <div class="form-group">
+            <label for="class_id">Select Class:</label>
+            <select id="class_id" name="class_id" required>
+                <option value="">-- Select Class --</option>
+                {% for class in classes %}
+                    <option value="{{ class.id }}">{{ class.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="section_id">Select Section:</label>
+            <select id="section_id" name="section_id" required disabled>
+                <option value="">Select Class First</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">View Students</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('class_id').addEventListener('change', function() {
+    const classId = this.value;
+    const sectionSelect = document.getElementById('section_id');
+    
+    if (classId) {
+        fetch(`/api/sections/${classId}`)
+            .then(response => response.json())
+            .then(sections => {
+                sectionSelect.disabled = false;
+                sectionSelect.innerHTML = '<option value="">Select Section</option>';
+                sections.forEach(section => {
+                    sectionSelect.innerHTML += `<option value="${section.id}">Section ${section.name}</option>`;
+                });
+            });
+    } else {
+        sectionSelect.disabled = true;
+        sectionSelect.innerHTML = '<option value="">Select Class First</option>';
+    }
+});
+</script>
+{% endblock %}

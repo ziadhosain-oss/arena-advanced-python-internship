@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div style="background: #fff; padding: 2rem; border-radius: 8px;">
+    <h1>{{ product.name }}</h1>
+    
+    <div style="margin: 1rem 0;">
+        <div class="status {{ product.status.value }}" style="font-size: 1rem; padding: 0.5rem 1rem;">
+            Status: {{ product.status.value.replace('_', ' ').upper() }}
+        </div>
+        
+        {% if product.price %}
+            <div class="price" style="font-size: 2rem; margin: 1rem 0;">${{ "%.2f"|format(product.price) }}</div>
+        {% else %}
+            <div class="price unavailable" style="font-size: 1.5rem; margin: 1rem 0;">
+                {{ product.original_price_text or 'Price not available' }}
+            </div>
+        {% endif %}
+        
+        {% if product.url %}
+            <p><strong>Source URL:</strong> <a href="{{ product.url }}" target="_blank">{{ product.url }}</a></p>
+        {% endif %}
+        
+        <p><strong>Product ID:</strong> {{ product.id }}</p>
+        <p><strong>Last Updated:</strong> {{ product.updated_at.strftime('%Y-%m-%d %H:%M:%S') if product.updated_at else 'N/A' }}</p>
+    </div>
+    
+    {% if product.is_available_for_purchase() %}
+        <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}" style="margin-top: 2rem;">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <div>
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" max="99" style="width: 80px; margin-left: 0.5rem;">
+                </div>
+                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                <a href="{{ url_for('view_cart') }}" class="btn btn-secondary">View Cart</a>
+            </div>
+        </form>
+    {% else %}
+        <div class="flash warning" style="margin-top: 2rem;">
+            This product is not available for purchase at this time.
+        </div>
+    {% endif %}
+    
+    <div style="margin-top: 2rem;">
+        <a href="{{ url_for('index') }}">← Back to Products</a>
+    </div>
+</div>
+{% endblock %}

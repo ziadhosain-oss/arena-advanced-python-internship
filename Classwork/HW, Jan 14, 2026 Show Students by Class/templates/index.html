@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h1>Welcome to Student Management System</h1>
+    <p style="margin-top: 1rem;">Manage students, classes, and sections efficiently.</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem;">
+        <div class="card" style="text-align: center;">
+            <h3>📚 View Students by Class</h3>
+            <p>Filter students by class and section</p>
+            <a href="{{ url_for('students_by_class') }}" class="btn btn-primary" style="margin-top: 1rem;">View →</a>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <h3>👨‍🎓 Add New Student</h3>
+            <p>Register a new student</p>
+            <a href="{{ url_for('add_student') }}" class="btn btn-success" style="margin-top: 1rem;">Add →</a>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <h3>📖 Manage Classes</h3>
+            <p>Add or remove classes</p>
+            <a href="{{ url_for('list_classes') }}" class="btn btn-info" style="margin-top: 1rem;">Manage →</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

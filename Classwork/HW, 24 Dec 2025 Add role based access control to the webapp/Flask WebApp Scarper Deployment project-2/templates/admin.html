@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Product Scraper</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .navbar { background-color: #1e293b; }
+        .card-img-top { height: 200px; object-fit: contain; padding: 15px; background: #fff; }
+        .product-card { transition: transform 0.2s; border: none; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .search-section { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">Scraper Admin</a>
+            <div class="ms-auto d-flex align-items-center">
+                <span class="text-light me-3">Welcome, <strong>{{ current_user.username }}</strong></span>
+                <a href="/admin/add_user" class="btn btn-outline-light btn-sm me-2">Add User</a>
+                <a href="/admin/list_user" class="btn btn-outline-light btn-sm me-2">List Users</a>
+                <a href="/" class="btn btn-outline-light btn-sm me-2">View Shop</a>
+                <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="search-section p-4 mb-5">
+            <h4 class="mb-3">Search & Scrape New Products</h4>
+            <form action="/admin" method="POST" class="row g-3">
+                <div class="col-md-9">
+                    <input type="text" name="query" class="form-control form-control-lg" 
+                           placeholder="Enter product keywords (e.g., 'Wireless Mouse')" required>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        Search Products
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h5 class="mb-4 text-secondary">
+                    {% if results %}
+                        Found {{ results|length }} results for your search:
+                    {% else %}
+                        No results to display. Start by searching above.
+                    {% endif %}
+                </h5>
+            </div>
+
+            {% for item in results %}
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="card h-100 product-card">
+                    <img src="{{ item.img_url }}" class="card-img-top" alt="Scraped Product">
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title text-truncate" title="{{ item.name }}">{{ item.name }}</h6>
+                        <p class="text-success fw-bold fs-5 mb-3">{{ item.price }}</p>
+                        
+                        <form action="/save" method="POST" class="mt-auto">
+                            <!-- <input type="hidden" name="name" value="{{ item.name }}">
+                            <input type="hidden" name="price" value="{{ item.price }}">
+                            <input type="hidden" name="img_url" value="{{ item.img_url }}">
+                            <input type="hidden" name="product_url" value="{{ item.product_url }}"> -->
+                            
+                            <button 
+                                type="submit" 
+                                class="btn btn-success btn-sm w-100 save-btn"
+                                data-name="{{ item.name }}"
+                                data-price="{{ item.price }}"
+                                data-img_url="{{ item.img_url }}"
+                                data-product_url="{{ item.product_url }}"
+                            >
+                                Save to Database
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.save-btn').forEach(button => {
+            button.addEventListener('click', function(event){
+                event.preventDefault();
+                const btn = this;
+
+                const productData = {
+                    name: btn.getAttribute('data-name'),
+                    price: btn.getAttribute('data-price'),
+                    img_url: btn.getAttribute('data-img_url'),
+                    product_url: btn.getAttribute('data-product_url')
+                };
+
+                fetch('/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(productData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        btn.textContent = 'Saved!';
+                        btn.classList.remove('btn-success');
+                        btn.classList.add('btn-secondary');
+                        btn.disabled = true;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

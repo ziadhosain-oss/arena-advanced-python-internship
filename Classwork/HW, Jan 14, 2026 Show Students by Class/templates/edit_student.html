@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Edit Student</h1>
+
+<div class="card">
+    <form method="POST" action="{{ url_for('edit_student', id=student.id) }}">
+        <div class="form-group">
+            <label for="roll_number">Roll Number *</label>
+            <input type="text" id="roll_number" name="roll_number" value="{{ student.roll_number }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="name">Student Name *</label>
+            <input type="text" id="name" name="name" value="{{ student.name }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" value="{{ student.email }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" name="phone" value="{{ student.phone }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="class_id">Class *</label>
+            <select id="class_id" name="class_id" required onchange="loadSections()">
+                {% for class in classes %}
+                    <option value="{{ class.id }}" {% if student.class_id == class.id %}selected{% endif %}>
+                        {{ class.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="section_id">Section *</label>
+            <select id="section_id" name="section_id" required>
+                {% for section in sections %}
+                    <option value="{{ section.id }}" {% if student.section_id == section.id %}selected{% endif %}>
+                        Section {{ section.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Update Student</button>
+        <a href="{{ url_for('list_students') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script>
+function loadSections() {
+    const classId = document.getElementById('class_id').value;
+    const sectionSelect = document.getElementById('section_id');
+    
+    if (classId) {
+        fetch(`/api/sections/${classId}`)
+            .then(response => response.json())
+            .then(sections => {
+                sectionSelect.innerHTML = '';
+                sections.forEach(section => {
+                    const option = document.createElement('option');
+                    option.value = section.id;
+                    option.textContent = `Section ${section.name}`;
+                    sectionSelect.appendChild(option);
+                });
+            });
+    }
+}
+
+// Load sections on page load
+document.addEventListener('DOMContentLoaded', loadSections);
+</script>
+{% endblock %}

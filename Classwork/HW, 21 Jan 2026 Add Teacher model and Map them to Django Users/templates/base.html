@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}School Management System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'teachers:dashboard' %}">School Management</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome, {{ user.get_full_name|default:user.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin:logout' %}">Logout</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 sidebar p-3">
+                <h5>Menu</h5>
+                <hr>
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'teachers:dashboard' %}">Dashboard</a>
+                    </li>
+                    {% if permissions.can_view_attendance %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'teachers:view_attendance_all' %}">Attendance</a>
+                    </li>
+                    {% endif %}
+                    {% if permissions.can_view_marks %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'teachers:view_marks_all' %}">Marks</a>
+                    </li>
+                    {% endif %}
+                    {% if permissions.can_view_fees %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'teachers:view_fees_all' %}">Fees</a>
+                    </li>
+                    {% endif %}
+                    {% if permissions.can_manage_students %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'teachers:manage_students' %}">Manage Students</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-md-10 p-4">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

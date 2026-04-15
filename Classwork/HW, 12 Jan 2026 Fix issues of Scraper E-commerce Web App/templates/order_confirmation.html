@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation{% endblock %}
+
+{% block content %}
+<div style="text-align: center; background: #fff; padding: 2rem; border-radius: 8px;">
+    <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+    <h1>Thank You for Your Order!</h1>
+    <p style="font-size: 1.25rem; margin: 1rem 0;">Order #{{ order.id }}</p>
+    
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0; text-align: left;">
+        <h3>Order Details</h3>
+        <p><strong>Email:</strong> {{ order.user_email }}</p>
+        <p><strong>Shipping Address:</strong><br>{{ order.shipping_address|replace('\n', '<br>')|safe }}</p>
+        <p><strong>Order Date:</strong> {{ order.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        
+        <h3>Items Ordered</h3>
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items %}
+                    <tr>
+                        <td>{{ item.product_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ "%.2f"|format(item.price_at_purchase) }}</td>
+                        <td>${{ "%.2f"|format(item.price_at_purchase * item.quantity) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+                    <td><strong>${{ "%.2f"|format(order.total_amount) }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Continue Shopping</a>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Home - E-Commerce Store{% endblock %}
+
+{% block content %}
+<h1>Our Products</h1>
+
+<div class="scrape-form">
+    <h3>Import Products</h3>
+    <form method="POST" action="{{ url_for('scrape_products') }}">
+        <input type="url" name="url" placeholder="Enter URL to scrape products (e.g., http://books.toscrape.com)" required>
+        <button type="submit" class="btn btn-primary">Scrape Products</button>
+    </form>
+    
+    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+        <a href="{{ url_for('add_demo_products') }}" class="btn btn-success">📦 Add Demo Products</a>
+        <a href="{{ url_for('clear_products') }}" class="btn btn-danger" onclick="return confirm('Are you sure? This will delete all products!')">🗑️ Clear All Products</a>
+    </div>
+    
+    <div style="margin-top: 1rem; padding: 0.5rem; background: #f8f9fa; border-radius: 4px; font-size: 0.875rem;">
+        <strong>💡 Tip:</strong> 
+        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+            <li>Click "Add Demo Products" to see how the system works with sample data</li>
+            <li>Try scraping: <code>http://books.toscrape.com</code> (a test e-commerce site)</li>
+            <li>Products with "Out of Stock" or "Up Coming" cannot be added to cart</li>
+        </ul>
+    </div>
+</div>
+
+{% if products %}
+    <div class="products-grid">
+        {% for product in products %}
+            <div class="product-card">
+                <h3>{{ product.name }}</h3>
+                
+                {% if product.price %}
+                    <div class="price">${{ "%.2f"|format(product.price) }}</div>
+                {% else %}
+                    <div class="price unavailable">{{ product.original_price_text or 'Price not available' }}</div>
+                {% endif %}
+                
+                <div class="status {{ product.status.value }}">
+                    {{ product.status.value.replace('_', ' ').upper() }}
+                </div>
+                
+                {% if product.is_available_for_purchase() %}
+                    <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}" class="add-to-cart-form">
+                        <input type="number" name="quantity" value="1" min="1" max="99" class="quantity-input">
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
+                {% else %}
+                    <button class="btn btn-primary" disabled style="opacity:0.5; cursor:not-allowed;">
+                        🚫 Not Available
+                    </button>
+                {% endif %}
+                
+                <div style="margin-top: 0.5rem;">
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}" style="font-size: 0.875rem;">View Details →</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div style="text-align: center; padding: 2rem; background: #fff; border-radius: 8px;">
+        <p>No products found.</p>
+        <div style="margin-top: 1rem;">
+            <a href="{{ url_for('add_demo_products') }}" class="btn btn-success">Click here to add demo products</a>
+        </div>
+        <p style="margin-top: 1rem; color: #666;">Or enter a URL above to scrape products from a website.</p>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Manage Sections</h1>
+
+<div class="card">
+    <form method="POST" action="{{ url_for('add_section') }}" style="display: flex; gap: 1rem;">
+        <select name="class_id" required style="flex: 1; padding: 0.5rem;">
+            <option value="">Select Class</option>
+            {% for class in classes %}
+                <option value="{{ class.id }}">{{ class.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="name" placeholder="Section (e.g., A, B, C)" required style="width: 100px; padding: 0.5rem;">
+        <button type="submit" class="btn btn-primary">Add Section</button>
+    </form>
+</div>
+
+{% if sections %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Section</th>
+                <th>Students</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for section in sections %}
+                <tr>
+                    <td>{{ section.class_obj.name }}</td>
+                    <td>{{ section.name }}</td>
+                    <td>{{ section.students|length }}</td>
+                    <td>
+                        <a href="{{ url_for('delete_section', id=section.id) }}" class="btn btn-danger" onclick="return confirm('Delete this section?')">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="card">
+        <p>No sections created yet. Use the form above to add sections to classes.</p>
+    </div>
+{% endif %}
+{% endblock %}

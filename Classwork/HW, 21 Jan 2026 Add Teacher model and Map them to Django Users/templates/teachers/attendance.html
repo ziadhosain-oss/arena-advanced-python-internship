@@ -1,0 +1,34 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}{{ module }} Management{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{ module }} Management</h1>
+            <div class="alert alert-info">
+                <h4>Access Granted</h4>
+                <p>You have access to view {{ module|lower }} records.</p>
+                {% if can_edit %}
+                <p>You also have permission to edit {{ module|lower }} records.</p>
+                {% endif %}
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ module }} Records</h5>
+                    <p class="text-muted">This section will display {{ module|lower }} data for students.</p>
+                    {% if student_id %}
+                    <p>Viewing records for Student ID: {{ student_id }}</p>
+                    {% endif %}
+                    
+                    {% if can_edit %}
+                    <button class="btn btn-success mt-3">Add New Record</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
