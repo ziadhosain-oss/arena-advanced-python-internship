@@ -1,28 +1,42 @@
-This repository contains all my work completed during the Arena Advanced Python Internship, including projects, classwork, and homework assignments.
+# Arena Advanced Python Internship – Portfolio
 
-It demonstrates practical experience in:
+This repository showcases the projects, coursework, and assignments completed during the **Arena Advanced Python Internship**. It reflects hands-on experience across core programming concepts, backend development, web scraping, and automation.
 
-🐍 Python programming fundamentals
-🌐 Web development using Django & Flask
-🤖 Automation with Telegram Bots
-🕸️ Web Scraping using BeautifulSoup & Requests
-📊 Data handling with Pandas
-🗄️ Databases (MongoDB & Django ORM)
-⚙️ API integration and backend development
-🚀 Projects Included
-Job Board App
-Price Tracker Bot (Scraping + Telegram Alerts)
-Recipe Sharing App (Django)
-Student Attendance & Performance System (Django + Pandas)
-📚 Structure
-Projects
-Classwork
-Homework
-🎯 Purpose
+## 🛠️ Skills Demonstrated
 
-This repository serves as a portfolio of hands-on learning, showcasing real-world problem solving and backend development skills.
+- **Python Fundamentals** – Core programming concepts and problem-solving
+- **Web Development** – Django, Flask
+- **Automation** – Telegram bot development
+- **Web Scraping** – BeautifulSoup, Requests
+- **Data Handling** – Pandas
+- **Databases** – MongoDB, Django ORM
+- **API Integration** – RESTful APIs and backend services
 
-👤 Author
+## 🚀 Projects
 
-Md. Ziad Hosain
-GitHub: https://github.com/ziadhosain-oss
+| Project | Description |
+|---|---|
+| **Job Board App** | A web application for posting and browsing job listings |
+| **Price Tracker Bot** | Automated price monitoring with web scraping and Telegram alerts |
+| **Recipe Sharing App** | A Django-based platform for sharing and discovering recipes |
+| **Student Attendance & Performance System** | A Django application with Pandas integration for tracking attendance and analyzing student performance |
+
+## 📁 Repository Structure
+
+```
+
+.
+├── Projects/       # Capstone and mini-projects
+├── Classwork/      # In-class exercises and demos
+└── Homework/       # Independent practice assignments
+
+```
+
+## 🎯 Purpose
+
+This repository serves as a portfolio of practical, project-based learning, demonstrating real-world problem-solving and backend development skills acquired throughout the internship.
+
+## 👤 Author
+
+**Md. Ziad Hosain**  
+GitHub: [ziadhosain-oss](https://github.com/ziadhosain-oss)
